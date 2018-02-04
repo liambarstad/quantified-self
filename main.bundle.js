@@ -61,12 +61,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10436,163 +10435,198 @@ return jQuery;
 
 
 /***/ },
+/* 1 */
+/***/ function(module, exports) {
 
-/***/ 1:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var $ = __webpack_require__(0);
-var Food = __webpack_require__(5);
-var API = 'https://ml-quantified-self.herokuapp.com/api/v1/';
-
-exports.getAllFoods = getAllFoods;
-exports.deleteFood = deleteFood;
-exports.postFood = postFood;
-exports.editBox = editBox;
-exports.editFood = editFood;
-
-
-function addInfo(id, name, calories, targetNode) {
-  targetNode.append('<td class="food-name" data-id="' + id + '">' + name + '</td>');
-  targetNode.append('<td class="food-calories" data-id="' + id + '">' + calories + '</td>');
-  targetNode.append('<td><img class="delete-food" data-id="' + id + '" src="./lib/assets/delete1.png"></td>');
+function webpackEmptyContext(req) {
+	throw new Error("Cannot find module '" + req + "'.");
 }
+webpackEmptyContext.keys = function() { return []; };
+webpackEmptyContext.resolve = webpackEmptyContext;
+module.exports = webpackEmptyContext;
+webpackEmptyContext.id = 1;
 
-function addFood(id, name, calories) {
-  var bottom = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
-
-  var newRow = '<tr class="food-' + id + '"></tr>';
-  if (bottom) {
-    $('#foods-table').append(newRow);
-  } else {
-    $(newElement).insertAfter('#foods-table-headers');
-  }
-  addInfo(id, name, calories, $('.food-' + id));
-}
-
-function getAllFoods() {
-  fetch(API + 'foods').then(function (response) {
-    return response.json();
-  }).then(function (data) {
-    data.forEach(function (food) {
-      addFood(food.id, food.name, food.calories);
-    });
-  });
-}
-
-function deleteFood(target) {
-  var id = target.dataset.id;
-  fetch(API + 'foods/' + id.toString(), { method: 'DELETE' }).then(function (data) {
-    $('.food-' + id).remove();
-  });
-}
-
-function postFood() {
-  var name = $('#new-food-name input').val();
-  var calories = $('#new-food-calories input').val();
-  $('#new-food-form .alert').empty();
-  $('#new-food-name input').val('');
-  $('#new-food-calories input').val('');
-  if (name === "") {
-    $('#new-food-name').append('<p class="alert">Please enter a food name</p>');
-  } else if (calories === "") {
-    $('#new-food-calories').append('<p class="alert">Please enter a calorie amount</p>');
-  } else {
-    sendPostRequest(name, calories.toString());
-  }
-}
-
-function sendPostRequest(name, calories) {
-  fetch(API + 'foods', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ food: { name: name, calories: calories } })
-  }).then(function (response) {
-    return response.json();
-  }).then(function (data) {
-    return addFood(data.id, data.name, data.calories, false);
-  });
-}
-
-function editBox(target) {
-  var input = document.createElement('input');
-  input.type = "text";
-  input.className = "editBox";
-  input.dataset.id = target.dataset.id;
-  target.replaceWith(input);
-}
-
-function editFood(id, attr) {
-  var $inputBox = $('input[data-id=' + id + ']');
-  var body = { food: {} };
-  body['food'][attr] = $inputBox.val();
-  fetch(API + 'foods/' + id.toString(), {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  }).then(function (response) {
-    return console.log(response);
-  });
-}
 
 /***/ },
-
-/***/ 15:
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var _foodService = __webpack_require__(1);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var $ = __webpack_require__(0);
+var FoodHelper = new !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())('../html_helpers/foodHelper');
+var QuantifiedApi = new !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())('../requests/quantified_api');
 
+var FoodService = function () {
+  function FoodService() {
+    _classCallCheck(this, FoodService);
+
+    this._editing = false;
+  }
+
+  _createClass(FoodService, [{
+    key: 'populateFoodTable',
+    value: function populateFoodTable() {
+      QuantifiedApi.getAllFoods().then(function (data) {
+        data.forEach(function (food) {
+          FoodHelper.addFood(food.id, food.name, food.calories);
+        });
+      });
+    }
+  }, {
+    key: 'deleteFood',
+    value: function deleteFood(target) {
+      QuantifiedApi.deleteFood(target.dataset.id).then(function (data) {
+        $('.food-' + target.dataset.id).remove();
+      });
+    }
+  }, {
+    key: 'postFood',
+    value: function postFood() {
+      var $nameBox = $('#new-food-name');
+      var $caloriesBox = $('#new-food-calories');
+      var name = $nameBox.find('input').val();
+      var calories = $caloriesBox.find('input').val();
+      if (FoodHelper.validateFoodInput(name, $nameBox, calories, $caloriesBox)) {
+        QuantifiedApi.sendPostRequest(name, calories.toString()).then(function (data) {
+          return FoodHelper.addFood(data.id, data.name, data.calories, false);
+        });
+      }
+    }
+  }, {
+    key: 'editBox',
+    value: function editBox(target) {
+      if ((target.className === 'food-name' || 'food-calories') && !this._editing) {
+        this._editing = true;
+        FoodHelper.addEditBox(target);
+        this.addEditListener(target);
+      };
+    }
+  }, {
+    key: 'addEditListener',
+    value: function addEditListener(target) {
+      var _this = this;
+
+      FoodHelper.addEditButton(target);
+      var id = target.dataset.id;
+      var attr = target.className.split("-")[1];
+      var $button = $('button[data-id=' + id + ']');
+      $($button).on('click', function (event) {
+        event.stopPropagation;
+        _this.editFood(id, attr);
+      });
+    }
+  }, {
+    key: 'editFood',
+    value: function editFood(id, attr) {
+      var $inputBox = $('input[data-id=' + id + ']');
+      var body = { food: {} };
+      body['food'][attr] = $inputBox.val();
+      FoodHelper.makeEditRequest(body).then(function (data) {
+        $('tr[class="food-' + data['id'] + '"]').remove();
+        FoodHelper.addFood(data['id'], data['name'], data['calories']);
+      });
+      this._editing = false;
+    }
+  }, {
+    key: 'editing',
+    get: function get() {
+      return this._editing;
+    }
+  }], [{
+    key: 'displayWith',
+    value: function displayWith(name) {
+      var foods = $('.food-name');
+      foods.each(function (ind, food) {
+        var $element = $(food);
+        var $row = $('tr.food-' + food.dataset.id);
+        var text = $element.text();
+        var span = name.length;
+        if (text.toLowerCase().slice(0, span) != name.toLowerCase()) {
+          $row.addClass("disabled");
+        } else {
+          $row.removeClass("disabled");
+        }
+      });
+    }
+  }]);
+
+  return FoodService;
+}();
+
+module.exports = FoodService;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';
+
+var $ = __webpack_require__(0);
+var FS = __webpack_require__(2);
+var FoodService = new FS();
 
 $(document).ready(function () {
-  var editing = false;
-  (0, _foodService.getAllFoods)();
-  $('#foods-table').on('click', function (event) {
-    event.stopPropagation();
-    var target = event.target;
-    if (target.className == 'delete-food') {
-      (0, _foodService.deleteFood)(target);
-    } else if ((target.className == 'food-name' || 'food-calories') && !editing) {
-      (0, _foodService.editBox)(target);
-      editing = true;
-      addEditListener(target);
-    }
-  });
+  FoodService.populateFoodTable();
+
   $('form input[value="submit"]').on('click', function (event) {
     event.preventDefault();
-    (0, _foodService.postFood)();
+    FoodService.postFood();
+  });
+
+  $('#foods-table').on('click', function (event) {
+    event.stopPropagation();
+    if (event.target.className == 'delete-food') {
+      FoodService.deleteFood(event.target);
+    } else if (event.target.className.length > 0) {
+      FoodService.editBox(event.target);
+    }
+  });
+
+  $('#filter-food-form').on('keyup', function (event) {
+    FS.displayWith($(event.target).val());
   });
 });
 
-function addEditButton(target) {
-  var id = target.dataset.id;
-  var deleteButton = $('td').find('img[data-id="' + id + '"]');
-  $('<button data-id="' + id + '">Edit</button>').insertAfter(deleteButton);
-}
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
 
-function addEditListener(target) {
-  addEditButton(target);
-  var id = target.dataset.id;
-  var attr = target.className.split("-")[1];
-  var $button = $('button[data-id=' + id + ']');
-  $($button).on('click', function (event) {
-    event.stopPropagation;
-    (0, _foodService.editFood)(id, attr);
+"use strict";
+'use strict';
+
+var $ = __webpack_require__(0);
+var MS = __webpack_require__(9);
+var FoodService = __webpack_require__(2);
+var MealService = new MS();
+
+$(document).ready(function () {
+  MealService.addMeals();
+
+  $('#filter-food').on('keyup', function (event) {
+    FoodService.displayWith($(event.target).val());
   });
-}
+
+  $('table.meal').on('click', function (event) {
+    if (event.target.hasClass('delete-food')) {
+      var mealId = event.currentTarget.dataset.id;
+      var foodId = event.target.dataset.id;
+      MealService.deleteFromMeal(mealId, foodId);
+    }
+  });
+});
 
 /***/ },
-
-/***/ 5:
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -10609,6 +10643,154 @@ Food.prototype.edit = function () {
 
 module.exports = Food;
 
-/***/ }
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
 
-/******/ });
+"use strict";
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var $ = __webpack_require__(0);
+var Food = __webpack_require__(8);
+var API = 'https://ml-quantified-self.herokuapp.com/api/v1/';
+
+var MealService = function () {
+  function MealService() {
+    _classCallCheck(this, MealService);
+
+    this.total = 0;
+  }
+
+  _createClass(MealService, [{
+    key: 'addMeals',
+    value: function addMeals() {
+      var _this = this;
+
+      var $mealsTables = $('#meals-tables');
+      fetch(API + 'meals').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        data.forEach(function (table) {
+          var newTable = $('<table class="meal" data-id=' + table["id"] + '><caption>' + table["name"] + '</caption></table>');
+          $mealsTables.append(newTable);
+          newTable.append('<tr><th>Name</th><th>Calories</th></tr>');
+          table["foods"].forEach(function (food) {
+            _this.addFood(food["id"], food["name"], food["calories"], table["id"], table["name"].toLowerCase());
+          });
+          _this.addTotalCalories(table["id"], table["name"]);
+        });
+      }).then(function (data) {
+        _this.initializeTotalsTable();
+      });
+    }
+  }, {
+    key: 'addFood',
+    value: function addFood(id, name, calories, mealId, mealName) {
+      var bottom = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
+
+      var newRow = $('<tr class="' + mealName + '-' + id + '"></tr>');
+      if (bottom) {
+        $('.meal[data-id=' + mealId + ']').append(newRow);
+      } else {
+        $(newRow).insertAfter('#meal-table-headers');
+      }
+      this.addInfo(id, name, calories, newRow);
+    }
+  }, {
+    key: 'addInfo',
+    value: function addInfo(id, name, calories, targetNode) {
+      targetNode.append('<td class="food-name" data-id="' + id + '">' + name + '</td>');
+      targetNode.append('<td class="food-calories" data-id="' + id + '">' + calories + '</td>');
+      targetNode.append('<td><img class="delete-food" data-id="' + id + '" src="./lib/assets/delete1.png"></td>');
+    }
+  }, {
+    key: 'addTotalCalories',
+    value: function addTotalCalories(id, name) {
+      var $table = $('table.meal[data-id=' + id + ']');
+      var $calories = $table.find('td.food-calories');
+      var subtotal = 0;
+      $calories.each(function (ind, calorie) {
+        subtotal += parseInt(calorie.textContent);
+      });
+      this.total += subtotal;
+      $table.append('<tr class=\'darker\'><td>Total Calories</td><td class="total">' + subtotal + '</td></td>');
+      var remaining = this.remainingCalories(name, subtotal);
+      var color = this.colorOfRemaining(remaining);
+      var remainingElement = $('<tr class=\'darker\'><td>Remaining Calories</td><td class=' + color + '>' + remaining + '</td></tr>');
+      $table.append(remainingElement);
+    }
+  }, {
+    key: 'remainingCalories',
+    value: function remainingCalories(tableName, total) {
+      if (tableName == "Snack") {
+        return 200 - total;
+      } else if (tableName == "Breakfast") {
+        return 400 - total;
+      } else if (tableName == "Lunch") {
+        return 600 - total;
+      } else if (tableName == "Dinner") {
+        return 800 - total;
+      } else {
+        return "N/A";
+      }
+    }
+  }, {
+    key: 'colorOfRemaining',
+    value: function colorOfRemaining(remaining) {
+      if (remaining > 0) {
+        return "green";
+      } else {
+        return "red";
+      }
+    }
+  }, {
+    key: 'initializeTotalsTable',
+    value: function initializeTotalsTable() {
+      var remaining = 2000 - this.total;
+      var $remainingBox = $('#remaining-calories');
+      $('#calories-consumed').text(this.total);
+      $remainingBox.text(remaining);
+      $remainingBox.addClass(this.colorOfRemaining(remaining));
+    }
+  }, {
+    key: 'deleteFromMeal',
+    value: function deleteFromMeal(mealId, foodId) {
+      debugger;
+      fetch(API + ('meals/' + mealId + '/foods/' + foodId), { method: 'DELETE' }).then(function (response) {
+        debugger;
+      });
+    }
+  }]);
+
+  return MealService;
+}();
+
+module.exports = MealService;
+
+/***/ },
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';
+
+var $ = __webpack_require__(0);
+__webpack_require__(3);
+__webpack_require__(4);
+$(document).ready(function () {});
+
+/***/ }
+/******/ ]);
