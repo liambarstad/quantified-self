@@ -39,6 +39,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
+    "express": "^4.16.2",
     "jQuery": "^1.7.4",
     "jsdom": "^11.6.0"
   }
