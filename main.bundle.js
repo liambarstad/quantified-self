@@ -10598,7 +10598,6 @@
 	  }, {
 	    key: 'addInfo',
 	    value: function addInfo(id, name, calories, targetNode) {
-	      debugger;
 	      if (window.location.href === "https://liambarstad.github.io/quantified-self/foods") {
 	        this.addFoodInfo(id, name, calories, targetNode);
 	      } else {
@@ -10674,7 +10673,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var API = "https://quantified-self-back-end.herokuapp.com/api/v1/";
+	var API = "https://ml-quantified-self.herokuapp.com/api/v1/";
 
 	var QuantifiedApi = function () {
 	  function QuantifiedApi() {
@@ -10684,24 +10683,20 @@
 	  _createClass(QuantifiedApi, [{
 	    key: 'getAllFoods',
 	    value: function getAllFoods() {
-	      return fetch(API + 'foods', {
-	        method: 'GET',
-	        mode: 'no-cors'
-	      }).then(function (response) {
+	      return fetch(API + 'foods').then(function (response) {
 	        return response.json();
 	      });
 	    }
 	  }, {
 	    key: 'deleteFood',
 	    value: function deleteFood(id) {
-	      return fetch(API + 'foods/' + id.toString(), { method: 'DELETE', mode: 'no-cors' });
+	      return fetch(API + 'foods/' + id.toString(), { method: 'DELETE' });
 	    }
 	  }, {
 	    key: 'sendPostRequest',
 	    value: function sendPostRequest(name, calories) {
 	      return fetch(API + 'foods', {
 	        method: 'POST',
-	        mode: 'no-cors',
 	        headers: { 'Content-Type': 'application/json' },
 	        body: JSON.stringify({ food: { name: name, calories: calories } })
 	      }).then(function (response) {
@@ -10713,7 +10708,6 @@
 	    value: function makeEditRequest(id, body) {
 	      return fetch(API + 'foods/' + id.toString(), {
 	        method: 'PATCH',
-	        mode: 'no-cors',
 	        headers: { 'Content-Type': 'application/json' },
 	        body: JSON.stringify(body)
 	      }).then(function (response) {
@@ -10723,21 +10717,20 @@
 	  }, {
 	    key: 'getAllMeals',
 	    value: function getAllMeals() {
-	      return fetch(API + 'meals', { mode: 'no-cors' }).then(function (response) {
+	      return fetch(API + 'meals').then(function (response) {
 	        return response.json();
 	      });
 	    }
 	  }, {
 	    key: 'deleteFromMeal',
 	    value: function deleteFromMeal(mealId, foodId) {
-	      return fetch(API + ('meals/' + mealId + '/foods/' + foodId), { method: 'DELETE', mode: 'no-cors' });
+	      return fetch(API + ('meals/' + mealId + '/foods/' + foodId), { method: 'DELETE' });
 	    }
 	  }, {
 	    key: 'postFoodMeal',
 	    value: function postFoodMeal(mealId, foodId) {
 	      return fetch(API + ('meals/' + mealId + '/foods/' + foodId), {
-	        method: "POST",
-	        mode: 'no-cors'
+	        method: "POST"
 	      }).then(function (response) {
 	        return response.json();
 	      });
